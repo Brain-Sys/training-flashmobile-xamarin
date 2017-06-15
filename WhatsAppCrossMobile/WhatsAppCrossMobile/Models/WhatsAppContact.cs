@@ -21,7 +21,14 @@ namespace WhatsAppCrossMobile.Models
         {
             get
             {
-                return string.Concat(this.FirstName, ", ", this.LastName);
+                if (string.IsNullOrEmpty(this.LastName))
+                {
+                    return this.FirstName;
+                }
+                else
+                {
+                    return string.Concat(this.FirstName, ", ", this.LastName);
+                }
             }
         }
 

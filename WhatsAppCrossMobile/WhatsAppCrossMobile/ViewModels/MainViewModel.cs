@@ -74,7 +74,6 @@ namespace WhatsAppCrossMobile.ViewModels
 
                     var contacts = CrossContacts.Current.Contacts.ToList();
                     var projection = contacts
-                    .Where(c => !string.IsNullOrEmpty(c.LastName))
                     .Where(c => !string.IsNullOrEmpty(c.FirstName))
                     .OrderBy(c => c.LastName)
                     .Select(c => new WhatsAppContact()
