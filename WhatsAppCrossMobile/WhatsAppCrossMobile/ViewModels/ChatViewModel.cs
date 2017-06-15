@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using Newtonsoft.Json;
 using PCLStorage;
+using Plugin.Geolocator;
 using Plugin.Settings;
 using System;
 using System.Collections.ObjectModel;
@@ -56,16 +57,19 @@ namespace WhatsAppCrossMobile.ViewModels
         public bool SendingMessage
         {
             get { return sendingMessage; }
-            set { sendingMessage = value;
+            set
+            {
+                sendingMessage = value;
                 base.RaisePropertyChanged();
             }
         }
 
-        private bool includeLocation;
         public bool IncludeLocation
         {
-            get { return includeLocation; }
-            set { includeLocation = value;
+            get { return CrossSettings.Current.GetValueOrDefault("IncludeLocation", false); }
+            set
+            {
+                CrossSettings.Current.AddOrUpdateValue("IncludeLocation", value);
                 base.RaisePropertyChanged();
             }
         }
@@ -101,12 +105,15 @@ namespace WhatsAppCrossMobile.ViewModels
             this.SendingMessage = true;
             HttpResponseMessage response = null;
 
+            var locator = CrossGeolocator.Current;
+            var position = await locator.GetPositionAsync(5000);
+
             var request = new AddLocationMessageRequest();
             request.CallerIdentifier = CrossSettings.Current.GetValueOrDefault("CallerIdentifier", string.Empty);
             request.DeviceIdentifier = CrossSettings.Current.GetValueOrDefault("DeviceIdentifier", string.Empty);
             request.ChatIdentifier = this.ChatId;
-            request.Latitude = 45;
-            request.Longitude = 9;
+            request.Latitude = (long)position.Latitude;
+            request.Longitude = (long)position.Longitude;
             request.Message = this.Text;
 
             string url = $"{base.BaseUrl}/Message/AddLocationMessage";
