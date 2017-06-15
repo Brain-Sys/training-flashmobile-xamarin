@@ -22,9 +22,13 @@
             <ListView.GroupHeaderTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <Frame BackgroundColor="BurlyWood" OutlineColor="Black" WidthRequest="120" HorizontalOptions="Start">
-                            <Label FontAttributes="Bold" Text="{Binding Key}" FontSize="Large" />
-                        </Frame>
+                        <Grid BackgroundColor="BurlyWood" WidthRequest="48" HorizontalOptions="Start">
+                            <Label FontAttributes="Bold" Text="{Binding Key}" FontSize="Large" TextColor="Black" Margin="12,4,0,0" />
+                        </Grid>
+                        <!--<Button BackgroundColor="BurlyWood" Text="{Binding Key}" WidthRequest="120" HorizontalOptions="Start" />-->
+                        <!--<Frame BackgroundColor="BurlyWood" OutlineColor="Black" WidthRequest="120" HorizontalOptions="Start">
+                            <Label FontAttributes="Bold" Text="{Binding Key}" FontSize="Large" TextColor="Black" />
+                        </Frame>-->
                     </ViewCell>
                 </DataTemplate>
             </ListView.GroupHeaderTemplate>
