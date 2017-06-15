@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:WhatsAppCrossMobile"
+             xmlns:vm="clr-namespace:WhatsAppCrossMobile.ViewModels"
+             x:Class="WhatsAppCrossMobile.MainPage">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <vm:MainViewModel x:Key="viewmodel" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid BindingContext="{StaticResource viewmodel}">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ListView ItemsSource="{Binding Contacts}" IsGroupingEnabled="True" Margin="8"
+                  ItemTapped="ListView_ItemTapped">
+            <ListView.GroupHeaderTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Frame BackgroundColor="BurlyWood" OutlineColor="Black" WidthRequest="120" HorizontalOptions="Start">
+                            <Label FontAttributes="Bold" Text="{Binding Key}" FontSize="Large" />
+                        </Frame>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.GroupHeaderTemplate>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Label Text="{Binding DisplayName}" Margin="4,0,0,0" />
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Button Grid.Row="1" Margin="8" Text="Disconnetti questo device" Command="{Binding DeleteDeviceCommand}" />
+
+    </Grid>
+
+</ContentPage>

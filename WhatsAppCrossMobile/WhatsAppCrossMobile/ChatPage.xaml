@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:WhatsAppCrossMobile.ViewModels"
+             x:Class="WhatsAppCrossMobile.ChatPage">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <vm:ChatViewModel x:Key="viewmodel" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid BindingContext="{StaticResource viewmodel}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Label Text="{Binding Title}" FontSize="Large" Margin="8" Grid.Row="0" />
+
+        <StackLayout Grid.Row="1" VerticalOptions="EndAndExpand" Margin="8">
+            <ListView ItemsSource="{Binding Messages}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid>
+                                <Label Text="{Binding Text}" Margin="4,0,0,0" HorizontalOptions="Start" />
+                                <Label Text="{Binding TimePassed}" Margin="0,0,4,0" HorizontalOptions="End" />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+
+        <Grid Grid.Row="2" Margin="8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label Text="invio in corso" TextColor="Red" FontSize="Micro" IsVisible="{Binding SendingMessage}" />
+            <Entry Placeholder="scrivi il tuo messaggio" PlaceholderColor="LightGray" Grid.Row="1" Grid.Column="0"
+                   Text="{Binding Text,Mode=TwoWay}"
+                   Completed="Entry_Completed" x:Name="First" />
+            <Button Grid.Row="1" Grid.Column="1" Text="Invia" Command="{Binding SendTextMessageCommand}" />
+        </Grid>
+
+        <Frame VerticalOptions="Center" BackgroundColor="BurlyWood" OutlineColor="Black" Margin="32,0"
+               IsVisible="{Binding IsBusyMessageVisible}" Grid.RowSpan="3">
+            <Label Text="{Binding BusyMessage}" FontSize="Default" HorizontalTextAlignment="Center" Grid.RowSpan="2" />
+        </Frame>
+
+    </Grid>
+
+</ContentPage>
