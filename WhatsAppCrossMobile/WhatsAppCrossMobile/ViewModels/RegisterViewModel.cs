@@ -62,7 +62,7 @@ namespace WhatsAppCrossMobile.ViewModels
                 var formData = request.GetFormData();
                 response = await base.Client.PostAsync(url, formData);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
             }

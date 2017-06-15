@@ -11,27 +11,12 @@ namespace WhatsAppCrossMobile.ViewModels
 {
     public class ApplicationViewModelBase : ViewModelBase
     {
+        // protected string BaseUrl { get; private set; } = "http://localhost:5000/api";
+        protected string BaseUrl { get; private set; } = "http://flashmobileservices.azurewebsites.net/api";
+
         protected IFolder RootFolder { get; private set; } = FileSystem.Current.LocalStorage;
-        protected string BaseUrl { get; private set; }
         protected HttpClient Client { get; private set; } = new HttpClient();
         public object Parameter { get; set; }
-
-        public ApplicationViewModelBase()
-        {
-            switch (Xamarin.Forms.Device.RuntimePlatform)
-            {
-                case "Android":
-                    {
-                        this.BaseUrl = "http://192.168.1.11:5000/api";
-                        break;
-                    }
-                case "Windows":
-                    {
-                        this.BaseUrl = "http://localhost:5000/api";
-                        break;
-                    }
-            }
-        }
 
         private bool isBusy;
         public bool IsBusy
