@@ -24,7 +24,7 @@
                     <DataTemplate>
                         <ViewCell>
                             <Grid>
-                                <Image VerticalOptions="Center" HorizontalOptions="Start" Opacity="0.1" Source="Location.png" />
+                                <Image VerticalOptions="Center" HorizontalOptions="Start" Opacity="0.1" Source="Location.png" IsVisible="{Binding WithLocation}" />
                                 <Label VerticalOptions="Center" Text="{Binding Text}" Margin="4,0,0,0" HorizontalOptions="Start" />
                                 <Label VerticalOptions="Center" Text="{Binding TimePassed}" Margin="0,0,4,0" HorizontalOptions="End" />
                             </Grid>

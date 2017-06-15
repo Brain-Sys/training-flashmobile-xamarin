@@ -8,6 +8,14 @@ namespace WhatsAppCrossMobile.Responses
 {
     public class LocationMessage : MessageBase
     {
+        public bool WithLocation
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         private double latitude;
         public double Latitude
         {

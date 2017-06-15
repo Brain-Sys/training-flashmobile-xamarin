@@ -9,6 +9,12 @@ namespace WhatsAppCrossMobile.Responses
 {
     public class TextMessage : MessageBase
     {
-        
+        public bool WithLocation
+        {
+            get
+            {
+                return false;
+            }
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace WhatsAppCrossMobile.Responses
 {
     public abstract class DocumentBase<T> : ObservableObject
     {
-        private static TimeSpan MinimumTime = TimeSpan.FromMilliseconds(500);
+        private static TimeSpan MinimumTime = TimeSpan.FromMilliseconds(2000);
 
         private DateTime createAt;
         public DateTime CreateAt
