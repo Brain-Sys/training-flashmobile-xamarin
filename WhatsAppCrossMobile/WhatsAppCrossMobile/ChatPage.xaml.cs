@@ -28,7 +28,7 @@ namespace WhatsAppCrossMobile
         private void Entry_Completed(object sender, EventArgs e)
         {
             var vm = this.Resources["viewmodel"] as ChatViewModel;
-            vm?.SendTextMessageCommand.Execute(null);
+            vm?.SendMessageCommand.Execute(null);
         }
 
         protected override void OnDisappearing()

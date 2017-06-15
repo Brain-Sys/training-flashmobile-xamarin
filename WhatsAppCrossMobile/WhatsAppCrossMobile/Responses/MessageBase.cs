@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WhatsAppCrossMobile.Responses
 {
-    public abstract class MessageBase : DocumentBase<string>
+    public class MessageBase : DocumentBase<string>
     {
         private bool read;
         public bool Read

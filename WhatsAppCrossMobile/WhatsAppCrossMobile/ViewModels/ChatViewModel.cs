@@ -5,6 +5,7 @@ using Plugin.Settings;
 using System;
 using System.Collections.ObjectModel;
 using System.Net.Http;
+using WhatsAppCrossMobile.Helpers;
 using WhatsAppCrossMobile.Messages;
 using WhatsAppCrossMobile.Models;
 using WhatsAppCrossMobile.Requests;
@@ -60,14 +61,80 @@ namespace WhatsAppCrossMobile.ViewModels
             }
         }
 
+        private bool includeLocation;
+        public bool IncludeLocation
+        {
+            get { return includeLocation; }
+            set { includeLocation = value;
+                base.RaisePropertyChanged();
+            }
+        }
+
         public ObservableCollection<MessageBase> Messages { get; set; }
 
+        public RelayCommand SendMessageCommand { get; set; }
         public RelayCommand SendTextMessageCommand { get; set; }
+        public RelayCommand SendLocationMessageCommand { get; set; }
 
         public ChatViewModel()
         {
+            this.SendMessageCommand = new RelayCommand(SendMessageCommandExecute);
             this.SendTextMessageCommand = new RelayCommand(SendTextMessageCommandExecute, SendTextMessageCommandCanExecute);
+            this.SendLocationMessageCommand = new RelayCommand(SendLocationMessageCommandExecute);
             this.Messages = new ObservableCollection<MessageBase>();
+        }
+
+        private void SendMessageCommandExecute()
+        {
+            if (this.IncludeLocation)
+            {
+                this.SendLocationMessageCommand.Execute(null);
+            }
+            else
+            {
+                this.SendTextMessageCommand.Execute(null);
+            }
+        }
+
+        private async void SendLocationMessageCommandExecute()
+        {
+            this.SendingMessage = true;
+            HttpResponseMessage response = null;
+
+            var request = new AddLocationMessageRequest();
+            request.CallerIdentifier = CrossSettings.Current.GetValueOrDefault("CallerIdentifier", string.Empty);
+            request.DeviceIdentifier = CrossSettings.Current.GetValueOrDefault("DeviceIdentifier", string.Empty);
+            request.ChatIdentifier = this.ChatId;
+            request.Latitude = 45;
+            request.Longitude = 9;
+            request.Message = this.Text;
+
+            string url = $"{base.BaseUrl}/Message/AddLocationMessage";
+
+            try
+            {
+                var formData = request.GetFormData();
+                response = await base.Client.PostAsync(url, formData);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<LocationMessage>(content);
+                this.Messages.Add(result);
+                this.Text = string.Empty;
+                mvvm.Messenger.Default.Send<SetFocusMessage>(new SetFocusMessage() { ControlName = "First" });
+            }
+            else
+            {
+                mvvm.Messenger.Default.Send<PromptMessage>(new PromptMessage("OOPPSS", "Qualcosa è andato storto!"));
+            }
+
+            this.SendingMessage = false;
         }
 
         private bool SendTextMessageCommandCanExecute()
@@ -156,7 +223,7 @@ namespace WhatsAppCrossMobile.ViewModels
             if (response != null && response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                var messages = JsonConvert.DeserializeObject<TextMessage[]>(content);
+                var messages = JsonConvert.DeserializeObject<MessageBase[]>(content, new MessagesConverter());
                 this.Messages = new ObservableCollection<MessageBase>(messages);
                 base.RaisePropertyChanged(nameof(Messages));
             }
