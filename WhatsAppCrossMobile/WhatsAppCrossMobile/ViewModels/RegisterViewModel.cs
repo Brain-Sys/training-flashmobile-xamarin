@@ -50,29 +50,18 @@ namespace WhatsAppCrossMobile.ViewModels
             this.IsBusy = true;
             this.BusyMessage = "Registrazione in corso";
 
-            HttpResponseMessage response = null;
             var request = new AddDeviceRequest();
             request.CallerIdentifier = callerIdentifier;
             request.DeviceIdentifier = deviceIdentifier;
 
             string url = $"{base.BaseUrl}/Device/Add";
 
-            try
-            {
-                var formData = request.GetFormData();
-                response = await base.Client.PostAsync(url, formData);
-            }
-            catch (Exception ex)
-            {
+            var response = await base.MakeWebRequestAsync<AddDeviceRequest, AddDeviceResponse>(url, request);
 
-            }
-
-            if (response != null && response.IsSuccessStatusCode)
+            if (response != null)
             {
-                var content = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<AddDeviceResponse>(content);
                 IFile file = await base.RootFolder.CreateFileAsync("profile", PCLStorage.CreationCollisionOption.ReplaceExisting);
-                await file.WriteAllTextAsync(content);
+                await file.WriteAllTextAsync(string.Empty);
 
                 CrossSettings.Current.AddOrUpdateValue("CallerIdentifier", this.CallerIdentifier);
                 CrossSettings.Current.AddOrUpdateValue("DeviceIdentifier", this.DeviceIdentifier);

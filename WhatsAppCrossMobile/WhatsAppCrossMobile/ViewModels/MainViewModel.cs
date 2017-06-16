@@ -83,10 +83,10 @@ namespace WhatsAppCrossMobile.ViewModels
                         LastName = c.LastName
                     });
 
-                    List<IGrouping<string, WhatsAppContact>> pippo = projection.GroupBy(p => p.Initial)
+                    List<IGrouping<string, WhatsAppContact>> groupedContacts = projection.GroupBy(p => p.Initial)
                     .OrderBy(p => p.Key).ToList();
 
-                    this.Contacts = new ObservableCollection<IGrouping<string, WhatsAppContact>>(pippo);
+                    this.Contacts = new ObservableCollection<IGrouping<string, WhatsAppContact>>(groupedContacts);
                     base.RaisePropertyChanged(nameof(Contacts));
                 });
             }

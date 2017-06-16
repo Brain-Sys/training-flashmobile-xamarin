@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using Newtonsoft.Json;
 using PCLStorage;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using WhatsAppCrossMobile.Requests;
 
 namespace WhatsAppCrossMobile.ViewModels
 {
@@ -48,6 +50,37 @@ namespace WhatsAppCrossMobile.ViewModels
         public virtual void Init()
         {
 
+        }
+
+        public async Task<TResponse> MakeWebRequestAsync<TRequest, TResponse>(string url, TRequest request)
+            where TRequest : RequestBase
+            where TResponse : class
+        {
+            HttpResponseMessage response = null;
+
+            try
+            {
+                var formData = request.GetFormData();
+                response = await this.Client.PostAsync(url, formData);
+
+                if (response != null && response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<TResponse>(content);
+
+                    return result;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                
+            }
+
+            return null;
         }
     }
 }
